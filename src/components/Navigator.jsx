@@ -1,9 +1,10 @@
+// Navigator.js
 import { useState } from "react";
 import NavigatorBtn from "./NavigatorBtn.jsx";
 import SheltersSearch from "./SheltersSearch.jsx";
+import SupplySearch from "./SupplySearch";
 
 export default function Navigator({ onCountyChange }) {
-  // State to keep track of the active view
   const [activeView, setActiveView] = useState("menu");
   const [selectedCounties, setSelectedCounties] = useState([]); // Keep track of selected counties
 
@@ -14,7 +15,6 @@ export default function Navigator({ onCountyChange }) {
     setActiveView("menu"); // Go back to the menu
   };
 
-  // Function to render the content based on the active view
   const renderContent = () => {
     switch (activeView) {
       case "Supply Search":
@@ -27,6 +27,7 @@ export default function Navigator({ onCountyChange }) {
             >
               Back
             </button>
+            <SupplySearch setActiveView={setActiveView}/>
           </div>
         );
       case "Shelter Locations":
@@ -65,6 +66,8 @@ export default function Navigator({ onCountyChange }) {
               <NavigatorBtn text="Supply Search" onClick={() => setActiveView("Supply Search")} />
               <NavigatorBtn text="Shelter Locations" onClick={() => setActiveView("Shelter Locations")} />
               <NavigatorBtn text="Evacuation Zones" onClick={() => setActiveView("Evacuation Zones")} />
+              {/* Add RadiusAdjust here for adjusting the radius */}
+              
             </div>
           </div>
         );
@@ -73,7 +76,7 @@ export default function Navigator({ onCountyChange }) {
 
   return (
     <div className="Nav align-center">
-      {renderContent()} {/* Render the active content or navigation menu */}
+      {renderContent()}
     </div>
   );
 }
