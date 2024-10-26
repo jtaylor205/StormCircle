@@ -56,40 +56,6 @@ export default function Map({ selectedCounties }) {
           duration: 2000,
           easing: (t) => t,
         });
-        
-        if (!mapRef.current.getSource("marker-source")) {
-          mapRef.current.addSource("marker-source", {
-            type: "geojson",
-            data: {
-              type: "FeatureCollection",
-              features: [
-                {
-                  type: "Feature",
-                  geometry: {
-                    type: "Point",
-                    coordinates: initialLocation,
-                  },
-                },
-              ],
-            },
-          });
-        }
-
-        if (!mapRef.current.getLayer("pulsing-ring")) {
-          mapRef.current.addLayer({
-            id: "pulsing-ring",
-            type: "circle",
-            source: "marker-source",
-            paint: {
-              "circle-radius": RADIUS_METERS,
-              "circle-color": "blue",
-              "circle-opacity": 0.3,
-              "circle-stroke-width": 1,
-              "circle-stroke-color": "blue",
-              "circle-pitch-alignment": "map",
-            },
-          });
-        }
 
         const userMarker = document.createElement("div");
         userMarker.style.cssText = `
@@ -253,23 +219,42 @@ export default function Map({ selectedCounties }) {
   };
 
   // Function to add markers for each POI
-  const addMarkersToMap = (pois) => {
-    // Clear previous markers
-    poiMarkers.forEach((marker) => marker.remove());
-    
-    // Add new markers
-    const newMarkers = pois.map((poi) => {
-      if (poi.coordinates) {
-        const marker = new mapboxgl.Marker({ color: "red" })
-          .setLngLat(poi.coordinates)
-          .addTo(mapRef.current);
+// Function to add markers for each POI with popups
+// Function to add markers for each POI with popups
+const addMarkersToMap = (pois) => {
+  // Clear previous markers
+  poiMarkers.forEach((marker) => marker.remove());
 
-        return marker;
-      }
-      return null;
-    }).filter(Boolean); // Remove null values from the array
-    setPoiMarkers(newMarkers);
-  };
+  // Add new markers with popups
+  const newMarkers = pois.map((poi) => {
+    if (poi.coordinates) {
+      const displayType = poi.properties.class.replace(/_/g, ' ');
+      // Create a popup with the POI's name
+      const popup = new mapboxgl.Popup({ offset: 25 })
+        .setHTML(`
+          <strong>${poi.properties.name}</strong><br />
+          <em>Type:</em> ${displayType || "Unknown"}
+        `);
+
+      // Create the marker and attach the popup
+      const marker = new mapboxgl.Marker({ color: "red" })
+        .setLngLat(poi.coordinates)
+        .setPopup(popup) // Attach the popup to the marker
+        .addTo(mapRef.current);
+
+      marker.getElement().addEventListener('click', () => {
+        console.log(`Marker clicked: ${poi.properties.name}`);
+      });
+
+      return marker;
+    }
+    return null;
+  }).filter(Boolean); // Remove null values from the array
+
+  setPoiMarkers(newMarkers);
+};
+
+
 
   // Reverse Geocode function
   const reverseGeocode = async (coordinates) => {
@@ -302,20 +287,6 @@ export default function Map({ selectedCounties }) {
       >
         <FaLocationArrow />
       </button>
-      {features.length > 0 && (
-        <div className="absolute bottom-10 left-10 p-4 bg-white rounded shadow-md max-w-xs max-h-64 overflow-y-auto">
-          <h3 className="font-bold">Essential POIs Within 3 Miles:</h3>
-          <ul>
-            {features.map((feature, index) => (
-              <li key={index}>
-                <strong>Name:</strong> {feature.properties.name} <br />
-                <strong>Type:</strong> {feature.properties.class || "Unknown"} <br />
-                <strong>Coordinates:</strong> {feature.coordinates ? feature.coordinates.join(", ") : "N/A"}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
     </div>
   );
 }
