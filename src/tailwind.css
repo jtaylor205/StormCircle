@@ -47,3 +47,38 @@ body {
     align-items: center;
     justify-content: center;
 }
+
+/* Checklist.css */
+.checklist-container {
+  position: fixed;
+  top: 50px; /* Adjust to position correctly in your layout */
+  right: 20px;
+  width: 300px;
+  background-color: rgba(211, 211, 211, 0.9); /* Light gray with transparency */
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000; /* Ensure it stays on top */
+}
+
+.checklist-toggle {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.checklist {
+  list-style-type: none;
+  padding: 0;
+  margin-top: 10px;
+}
+
+.checklist li {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
