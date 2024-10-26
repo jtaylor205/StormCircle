@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import mapboxgl from 'mapbox-gl';
 import "mapbox-gl/dist/mapbox-gl.css";
 import { FaLocationArrow } from "react-icons/fa";
@@ -22,7 +22,8 @@ const geocodeAddress = async (address) => {
   return null;
 };
 
-export default function Map() {
+export default function Map({ selectedCounties }) {
+  const [shelterMarkers, setShelterMarkers] = useState([]); // Store shelter markers
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
   const markerRef = useRef(null); // Ref to store the actual user marker (pin)
@@ -48,13 +49,20 @@ export default function Map() {
         easing: (t) => t,
       });
 
-      addShelterMarkers(); // Add shelter markers when the map loads
+      addShelterMarkers(selectedCounties); // Add shelter markers based on the selected counties
     });
   };
 
   // Function to add shelter markers to the map
-  const addShelterMarkers = async () => {
-    for (const county of Object.keys(sheltersData.Tampa_Bay_Area_Shelters)) {
+  const addShelterMarkers = async (counties) => {
+    if (!mapRef.current) return; // Make sure the map is initialized
+
+    // Remove existing markers from the map
+    shelterMarkers.forEach((marker) => marker.remove());
+    const newMarkers = [];
+
+    // Loop through selected counties and add shelter markers
+    for (const county of counties) {
       const countyData = sheltersData.Tampa_Bay_Area_Shelters[county];
       for (const shelterType of Object.keys(countyData)) {
         const shelters = countyData[shelterType];
@@ -65,20 +73,27 @@ export default function Map() {
           const coords = await geocodeAddress(Address);
 
           if (coords) {
-            // Create a popup with the shelter's name
-            const popup = new mapboxgl.Popup({ offset: 25 }).setText(Name);
+            // Create a popup with the shelter's name and a navigation link
+            const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
+              <strong>${Name}</strong><br />
+              <button onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${coords[1]},${coords[0]}', '_blank')">Navigate</button>
+            `);
 
             // Add a marker for the shelter at the geocoded coordinates
-            new mapboxgl.Marker()
+            const marker = new mapboxgl.Marker()
               .setLngLat(coords)
               .setPopup(popup)
               .addTo(mapRef.current);
+
+            newMarkers.push(marker);
           } else {
             console.error(`Failed to geocode address for ${Name}`);
           }
         });
       }
     }
+
+    setShelterMarkers(newMarkers); // Store the new markers
   };
 
   // Function to reset the map view to the user's current location
@@ -152,12 +167,18 @@ export default function Map() {
     return () => mapRef.current && mapRef.current.remove();
   }, []);
 
+  // Update shelter markers when selected counties change
+  useEffect(() => {
+    addShelterMarkers(selectedCounties);
+  }, [selectedCounties]);
+
   return (
     <div>
       <div
         ref={mapContainerRef}
         className="w-full h-[100vh] rounded-lg border-4 border-blue-500 overflow-hidden"
       />
+
       <button
         onClick={resetToUserLocation}
         className="Reset"

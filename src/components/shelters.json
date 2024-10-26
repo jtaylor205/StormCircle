@@ -323,6 +323,90 @@
         "Address": "2927 North Forest Ridge Blvd., Hernando"
       }
     ]
-  }
-}
+  },
+    "Lee_County": {
+      "General_Population_Shelters": [
+        {
+          "Name": "Dunbar High School",
+          "Address": "3800 Edison Avenue, Fort Myers, FL 33916"
+        },
+        {
+          "Name": "Estero Recreation Center",
+          "Address": "9200 Corkscrew Palms Blvd., Estero, FL 33928"
+        },
+        {
+          "Name": "Island Coast High School",
+          "Address": "2125 DeNavarra Pkwy., Cape Coral, FL 33909"
+        },
+        {
+          "Name": "Alico Arena",
+          "Address": "12181 Fgcu Lake Pkwy E, Fort Myers, FL 33965"
+        },
+        {
+          "Name": "East Lee County High School",
+          "Address": "715 Thomas Sherwin Ave., Lehigh Acres, FL 33974"
+        },
+        {
+          "Name": "Gateway High School",
+          "Address": "13820 Griffin Dr., Fort Myers, FL 33913"
+        },
+        {
+          "Name": "Harns Marsh Elementary",
+          "Address": "1800 Unice Avenue N., Lehigh Acres, FL 33971"
+        },
+        {
+          "Name": "Harns Marsh Middle School",
+          "Address": "1820 Unice Avenue N., Lehigh Acres, FL 33971"
+        },
+        {
+          "Name": "Oak Hammock Middle School",
+          "Address": "5321 Tice Street, Fort Myers, FL 33905"
+        },
+        {
+          "Name": "Tortuga Preserve Elementary",
+          "Address": "1711 Gunnery Road N., Lehigh Acres, FL 33971"
+        },
+        {
+          "Name": "Treeline Elementary School",
+          "Address": "10900 Treeline Ave., Fort Myers, FL 33913"
+        },
+        {
+          "Name": "Varsity Lakes Middle School",
+          "Address": "801 Gunnery Road North, Lehigh Acres, FL 33971"
+        },
+        {
+          "Name": "Amanecer Elementary School",
+          "Address": "641 Sunshine Blvd., Lehigh Acres, FL"
+        },
+        {
+          "Name": "Hertz Arena",
+          "Address": "11000 Everblades Parkway, Estero, FL 33928"
+        },
+        {
+          "Name": "Manatee Elementary",
+          "Address": "5301 Tice Street, Fort Myers, FL 33905"
+        },
+        {
+          "Name": "Mirror Lakes Elementary School",
+          "Address": "525 Charwood Avenue S., Lehigh Acres, FL 33936"
+        },
+        {
+          "Name": "N. Fort Myers Academy of the Arts",
+          "Address": "1856 Arts Way, North Fort Myers, FL 33917"
+        },
+        {
+          "Name": "North Fort Myers Recreation Center",
+          "Address": "2000 N. Recreation Park Way, North Fort Myers, FL 33903"
+        },
+        {
+          "Name": "South Fort Myers High School",
+          "Address": "14020 Plantation Road, Fort Myers, FL 33912"
+        },
+        {
+          "Name": "Veterans Park Recreation Center",
+          "Address": "49 Homestead Road S., Lehigh Acres, FL 33936"
+        }
+      ]
+    }
+  }  
 }
