@@ -11,17 +11,18 @@ export default function Map() {
   const markerRef = useRef(null); // Ref to store the actual marker (pin)
 
   const initializeMap = (center) => {
+    // Initialize the Mapbox map
     mapRef.current = new mapboxgl.Map({
       container: mapContainerRef.current,
-      center: center,
-      zoom: 5,
+      center: center, // Use the user's location as the center
+      zoom: 16, // Set initial zoom level
       pitch: 45,
       bearing: 0,
       style: "mapbox://styles/j-taylor/cm2pi61u300ef01ph12le6si4",
     });
 
+    // Animate the zoom, pitch, and bearing when the map loads
     mapRef.current.on("load", () => {
-      // Set initial zoom, pitch, and bearing animation
       mapRef.current.easeTo({
         zoom: 16.25,
         pitch: 52,
@@ -30,7 +31,7 @@ export default function Map() {
         easing: (t) => t,
       });
 
-      // Add the marker source and layer if they don't already exist
+      // Add a pulsing ring around the marker (if necessary)
       if (!mapRef.current.getSource("marker-source")) {
         mapRef.current.addSource("marker-source", {
           type: "geojson",
@@ -50,61 +51,82 @@ export default function Map() {
             "circle-opacity": 0.2,
             "circle-stroke-width": 1,
             "circle-stroke-color": "blue",
-            "circle-pitch-alignment": "map", // Aligns the circle with map pitch
+            "circle-pitch-alignment": "map",
           }
         });
       }
     });
 
-    // Add click event to place both a pulsing ring and a marker
-    mapRef.current.on("click", (e) => {
-      const coordinates = e.lngLat;
+    // Place a marker at the clicked location (if desired)
+    // mapRef.current.on("click", (e) => {
+    //   const coordinates = e.lngLat;
 
-      // Update the GeoJSON source with the new marker location for the pulsing ring
-      if (mapRef.current.getSource("marker-source")) {
-        mapRef.current.getSource("marker-source").setData({
-          type: "FeatureCollection",
-          features: [
-            {
-              type: "Feature",
-              geometry: {
-                type: "Point",
-                coordinates: [coordinates.lng, coordinates.lat]
-              }
-            }
-          ]
-        });
-      }
+    //   // Update the pulsing ring location
+    //   if (mapRef.current.getSource("marker-source")) {
+    //     mapRef.current.getSource("marker-source").setData({
+    //       type: "FeatureCollection",
+    //       features: [
+    //         {
+    //           type: "Feature",
+    //           geometry: {
+    //             type: "Point",
+    //             coordinates: [coordinates.lng, coordinates.lat]
+    //           }
+    //         }
+    //       ]
+    //     });
+    //   }
 
-      // Remove the existing actual marker if there is one
-      if (markerRef.current) {
-        markerRef.current.remove();
-      }
+    //   // Remove the existing marker if one exists
+    //   if (markerRef.current) {
+    //     markerRef.current.remove();
+    //   }
 
-      // Create a new actual marker (pin) and set it to markerRef
-      markerRef.current = new mapboxgl.Marker()
-        .setLngLat([coordinates.lng, coordinates.lat])
-        .addTo(mapRef.current);
-    });
+    //   // Add a new marker at the clicked location
+    //   markerRef.current = new mapboxgl.Marker()
+    //     .setLngLat([coordinates.lng, coordinates.lat])
+    //     .addTo(mapRef.current);
+    // });
   };
 
   useEffect(() => {
+    // Fetch the user's current location using the Geolocation API
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const userLocation = [position.coords.longitude, position.coords.latitude];
+
+          // Initialize the map centered on the user's location
           initializeMap(userLocation);
+
+          // Add a blue marker with shadow at the user's location
+          if (mapRef.current) {
+            const userMarker = document.createElement("div");
+            userMarker.style.cssText = `
+              height: 12px;
+              width: 12px;
+              border: 1.5px solid #fafafa;
+              border-radius: 50%;
+              background-color: #38bdf8;
+              box-shadow: 0px 0px 4px 2px rgba(14,165,233,1);
+            `;
+            markerRef.current = new mapboxgl.Marker(userMarker) // Use custom blue marker element
+              .setLngLat(userLocation) // Set marker at user's location
+              .addTo(mapRef.current);
+          }
         },
         (error) => {
           console.error("Error fetching location:", error);
+          // Fallback to a default location (e.g., New York City) if there's an error
           initializeMap([-74.5, 40]);
         }
       );
     } else {
       console.error("Geolocation not supported by this browser.");
-      initializeMap([-74.5, 40]);
+      initializeMap([-74.5, 40]); // Fallback to default location if Geolocation is not supported
     }
 
+    // Cleanup on component unmount
     return () => mapRef.current && mapRef.current.remove();
   }, []);
 
