@@ -1,0 +1,328 @@
+{
+    "Tampa_Bay_Area_Shelters": {
+      "Pinellas_County": {
+        "General_Population_Shelters_Pet_Friendly": [
+          {
+            "Name": "Largo High School",
+            "Address": "410 Missouri Avenue North, Largo"
+          },
+          {
+            "Name": "Gibbs High School",
+            "Address": "850 34th Street South, St. Petersburg"
+          },
+          {
+            "Name": "Palm Harbor University High School",
+            "Address": "1900 Omaha Street, Palm Harbor"
+          }
+        ],
+        "General_Population_Shelters_No_Pet": [
+          {
+            "Name": "Lealman Innovation Academy",
+            "Address": "4900 28th St N, St. Petersburg"
+          },
+          {
+            "Name": "Clearwater Fundamental Middle School",
+            "Address": "1660 Palmetto St, Clearwater"
+          }
+        ],
+        "Special_Needs_Shelters": [
+          {
+            "Name": "Palm Harbor University High School Building 19",
+            "Address": "1900 Omaha Street, Palm Harbor"
+          },
+          {
+            "Name": "Dunedin Highland Middle School",
+            "Address": "70 Patricia Avenue, Dunedin"
+          },
+          {
+            "Name": "Oak Grove Middle School",
+            "Address": "1370 S. Belcher Road, Clearwater"
+          }
+        ]
+      },
+      "Hernando_County": {
+        "General_Population_Shelters_Pet_Friendly": [
+          {
+            "Name": "Challenger K-8",
+            "Address": "13400 Elgin Blvd., Spring Hill"
+          },
+          {
+            "Name": "West Hernando Middle School",
+            "Address": "14325 Ken Austin Pkwy., Brooksville"
+          },
+          {
+            "Name": "Enrichment Center",
+            "Address": "800 John Gary Grubbs Blvd., Brooksville"
+          }
+        ]
+      },
+      "Hillsborough_County": {
+        "General_Population_Shelters_Pet_Friendly": [
+          {
+            "Name": "Burnett Middle School",
+            "Address": "1010 N. Kingsway Rd., Seffner"
+          },
+          {
+            "Name": "Durant High School",
+            "Address": "4748 Cougar Path, Plant City"
+          },
+          {
+            "Name": "Middleton High School",
+            "Address": "4801 N. 22nd St., Tampa"
+          },
+          {
+            "Name": "Shields Middle School",
+            "Address": "15732 Beth Shields Way, Ruskin"
+          },
+          {
+            "Name": "Sickles High School",
+            "Address": "7950 Gunn Hwy., Tampa"
+          }
+        ],
+        "General_Population_Shelters_No_Pet": [
+          {
+            "Name": "Pizzo Elementary School",
+            "Address": "11701 USF Bull Run Dr., Tampa"
+          }
+        ],
+        "Special_Needs_Shelters": [
+          {
+            "Name": "Erwin Technical College",
+            "Address": "2010 E. Hillsborough Ave., Tampa"
+          },
+          {
+            "Name": "Sumner High School",
+            "Address": "10650 County Rd. 672, Riverview"
+          },
+          {
+            "Name": "Strawberry Crest High School",
+            "Address": "4691 Gallagher Rd., Dover"
+          }
+        ]
+      },
+      "Sarasota_County": {
+        "General_Population_Shelters_Pet_Friendly": [
+          {
+            "Name": "Atwater Elementary School",
+            "Address": "4701 Huntsville Ave., North Port"
+          },
+          {
+            "Name": "Booker High School",
+            "Address": "3201 N. Orange Ave., Sarasota"
+          },
+          {
+            "Name": "Brookside Middle School",
+            "Address": "3636 South Shade Ave., Sarasota"
+          },
+          {
+            "Name": "Fruitville Elementary School",
+            "Address": "601 Honore Ave., Sarasota"
+          },
+          {
+            "Name": "Gulf Gate Elementary School",
+            "Address": "6500 S. Lockwood Ridge Road, Sarasota"
+          },
+          {
+            "Name": "Heron Creek Middle School",
+            "Address": "6501 W. Price Blvd, North Port"
+          },
+          {
+            "Name": "North Port High School",
+            "Address": "6400 West Price Blvd, North Port"
+          },
+          {
+            "Name": "Phillippi Shores Elementary",
+            "Address": "4747 S. Tamiami Trail, Sarasota"
+          },
+          {
+            "Name": "Riverview High School",
+            "Address": "1 Ram Way, Sarasota"
+          },
+          {
+            "Name": "Southside Elementary School",
+            "Address": "1901 Webber Street, Sarasota"
+          },
+          {
+            "Name": "Taylor Ranch Elementary",
+            "Address": "2500 Taylor Ranch Trail, Venice"
+          },
+          {
+            "Name": "Woodland Middle School",
+            "Address": "2700 Panacea Blvd., North Port"
+          }
+        ]
+      },
+      "Manatee_County": {
+        "General_Population_Shelters_Pet_Friendly": [
+          {
+            "Name": "Gullett Elementary School",
+            "Address": "12125 44th Ave E, Bradenton"
+          },
+          {
+            "Name": "Harvey Elementary School",
+            "Address": "8610 115th Ave E, Parrish"
+          },
+          {
+            "Name": "McNeal Elementary School",
+            "Address": "6325 Lorraine Rd, Bradenton"
+          },
+          {
+            "Name": "Miller Elementary School",
+            "Address": "601 43rd St W, Bradenton"
+          },
+          {
+            "Name": "Mills Elementary School",
+            "Address": "7200 69th St E, Palmetto"
+          },
+          {
+            "Name": "Mona Jain Middle School",
+            "Address": "12205 44th Ave E, Bradenton"
+          },
+          {
+            "Name": "Myakka City Elementary School",
+            "Address": "37205 Manatee Ave, Myakka City"
+          },
+          {
+            "Name": "Sugg Middle School",
+            "Address": "5602 38th Ave W, Bradenton"
+          }
+        ]
+      },
+      "Pasco_County": {
+        "General_Population_Shelters_Pet_Friendly": [
+          {
+            "Name": "Centennial Middle School",
+            "Address": "38505 Centennial Road, Dade City"
+          },
+          {
+            "Name": "Fivay High School",
+            "Address": "12115 Chicago Avenue, Hudson"
+          },
+          {
+            "Name": "Wesley Chapel High School",
+            "Address": "30651 Wells Road, Wesley Chapel"
+          },
+          {
+            "Name": "River Ridge Middle and High Schools",
+            "Address": "11646 Town Center Road, New Port Richey"
+          },
+          {
+            "Name": "Fasano Regional Hurricane Center",
+            "Address": "11611 Denton Avenue, Hudson"
+          },
+          {
+            "Name": "Sunlake High School",
+            "Address": "3023 Sunlake Blvd, Land O’Lakes"
+          }
+        ]
+      },
+    "Polk_County": {
+    "General_Population_Shelters": [
+      {
+        "Name": "Auburndale High School",
+        "Address": "1 Bloodhound Trail, Auburndale"
+      },
+      {
+        "Name": "Spessard Holland Elementary School",
+        "Address": "2432 E.F. Griffin Road, Bartow"
+      },
+      {
+        "Name": "Citrus Ridge Academy",
+        "Address": "1775 Sand Mine Road, Davenport"
+      },
+      {
+        "Name": "Horizons Elementary School",
+        "Address": "1700 Forest Lake Dr., Davenport"
+      },
+      {
+        "Name": "George Jenkins High School",
+        "Address": "6000 Lakeland Highlands Road, Lakeland"
+      },
+      {
+        "Name": "Highlands Grove Elementary",
+        "Address": "4510 Lakeland Highlands Road, Lakeland"
+      },
+      {
+        "Name": "Kathleen High School",
+        "Address": "1100 Red Devil Way, Lakeland"
+      },
+      {
+        "Name": "R. Bruce Wagner Elementary School",
+        "Address": "5500 Yates Road, Lakeland"
+      },
+      {
+        "Name": "Sleepy Hill Elementary School",
+        "Address": "2285 Sleepy Hill Road, Lakeland"
+      },
+      {
+        "Name": "Mulberry Middle School",
+        "Address": "500 S.E. Martin Luther King Jr. Ave., Mulberry"
+      },
+      {
+        "Name": "Lake Marion Creek Middle School",
+        "Address": "3055 Lake Marion Creek Dr., Poinciana"
+      },
+      {
+        "Name": "Chain of Lakes Elementary School",
+        "Address": "7001 Hwy. 653, Winter Haven"
+      },
+      {
+        "Name": "Winter Haven High School",
+        "Address": "600 6th St. S.E., Winter Haven"
+      }
+    ],
+    "General_Population_Shelters_Pet_Friendly": [
+      {
+        "Name": "Haines City High School",
+        "Address": "2800 Hornet Dr., Haines City"
+      },
+      {
+        "Name": "Lake Region High School",
+        "Address": "1995 Thunder Road, Eagle Lake"
+      },
+      {
+        "Name": "Tenoroc High School",
+        "Address": "4905 Saddle Creek Road, Lakeland"
+      }
+    ],
+    "Special_Needs_Shelters": [
+      {
+        "Name": "FDOH Polk Specialty Care Unit",
+        "Address": "1255 Brice Blvd., Bartow"
+      },
+      {
+        "Name": "Ridge Community High School",
+        "Address": "500 W. Orchid Dr., Davenport"
+      },
+      {
+        "Name": "McKeel Academy",
+        "Address": "1810 W. Parker St., Lakeland"
+      }
+    ]
+  },
+  "Citrus_County": {
+    "General_Population_Shelters": [
+      {
+        "Name": "Central Ridge Elementary School",
+        "Address": "185 West Citrus Springs Blvd., Citrus Springs"
+      },
+      {
+        "Name": "Citrus High School",
+        "Address": "600 West Highland Blvd., Inverness"
+      }
+    ],
+    "Pet_Friendly_Shelter": [
+      {
+        "Name": "Renaissance Center",
+        "Address": "3630 W Educational Path, Lecanto"
+      }
+    ],
+    "Special_Needs_Shelter": [
+      {
+        "Name": "Forest Ridge Elementary School",
+        "Address": "2927 North Forest Ridge Blvd., Hernando"
+      }
+    ]
+  }
+}
+}
