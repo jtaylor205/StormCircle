@@ -1,13 +1,15 @@
 // App.js
-import React from "react";
-import Map from "./components/Map.jsx";
-import Navigator from "./components/Navigator.jsx";
+import React, { useState } from "react";
+import Navigator from "./components/Navigator";
+import Map from "./components/Map";
 
 export default function App() {
+  const [radius, setRadius] = useState(100); // Shared radius state
+
   return (
-    <div>
-      <Navigator />
-      <Map />
+    <div className="app-container">
+      <Navigator radius={radius} setRadius={setRadius} />
+      <Map radius={radius} setRadius={setRadius} />
     </div>
   );
 }
