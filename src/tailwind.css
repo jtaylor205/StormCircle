@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.Nav {
+    position: fixed;
+    width: 30vw;
+    height: 80vh;
+    margin-left: 5vw;
+    margin-top: 5vw;
+    z-index: 10;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+    padding: 4vw;
+}
