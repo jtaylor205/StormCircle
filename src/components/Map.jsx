@@ -1,12 +1,15 @@
-// MapComponent.js
+
 import React, { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { FaLocationArrow } from "react-icons/fa";
 
+import sheltersData from './shelters.json'; // Adjust path to your JSON file
+
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN;
 const TILEQUERY_URL = "https://api.mapbox.com/v4/mapbox.mapbox-streets-v8/tilequery";
 const GEOCODING_URL = "https://api.mapbox.com/geocoding/v5/mapbox.places";
+
 
 export default function Map({ radius }) {
   const mapContainerRef = useRef(null);
@@ -107,6 +110,7 @@ export default function Map({ radius }) {
     }
   }, [mapContainerRef.current]);
 
+  // On mount, initialize the map and set the user's current location
   useEffect(() => {
     if (mapRef.current && mapRef.current.isStyleLoaded() && mapRef.current.getLayer("pulsing-ring")) {
       mapRef.current.setPaintProperty("pulsing-ring", "circle-radius", radius);
@@ -193,12 +197,10 @@ export default function Map({ radius }) {
   };
   
 
-
-
-
   return (
     <div>
       <div ref={mapContainerRef} className="w-full h-[100vh] rounded-lg border-4 border-blue-500 overflow-hidden" />
+
       <button
         onClick={() => {
           if (userLocation) {
