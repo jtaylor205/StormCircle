@@ -21,15 +21,18 @@ export default function Checklist({ items }) {
 
   return (
     <>
-      <button
-        onClick={toggleVisibility}
-        className={`fixed top-1/2 transform -translate-y-1/2 right-2 z-50 text-blue-600 font-semibold bg-gray-200 bg-opacity-90 rounded-tl-lg rounded-bl-lg py-2 px-4 shadow-lg transition-transform duration-300 ${
-          isVisible ? "-rotate-90 -translate-x-20" : "-rotate-145 translate-x-0"
-        }`}
-        style={{ writingMode: "vertical-rl", transformOrigin: "right center" }}
-      >
-        {isVisible ? "Close Checklist" : "Open Checklist"}
-      </button>
+<button
+  onClick={toggleVisibility}
+  className="fixed top-1/2 transform -translate-y-1/2 right-2 z-50 text-blue-600 font-semibold bg-gray-200 bg-opacity-90 rounded-tl-lg rounded-bl-lg py-2 px-4 shadow-lg transition-transform duration-300"
+  style={{
+    writingMode: "vertical-rl",
+    transformOrigin: "right center",
+    transform: `translateY(-50%) ${isVisible ? 'translateX(-247px)' : 'translateX(0)'}`,
+  }}
+>
+  {isVisible ? "Close Checklist" : "Open Checklist"}
+</button>
+
 
 
 
