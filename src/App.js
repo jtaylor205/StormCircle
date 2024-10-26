@@ -1,15 +1,20 @@
 // App.js
 import React, { useState } from "react";
-import Navigator from "./components/Navigator";
-import Map from "./components/Map";
+import Map from "./components/Map.jsx";
+import Navigator from "./components/Navigator.jsx";
 
 export default function App() {
-  const [radius, setRadius] = useState(100); // Shared radius state
+  const [selectedCounties, setSelectedCounties] = useState([]);
+
+  //function to update selected counties
+  const handleCountyChange = (counties) => {
+    setSelectedCounties(counties);
+  };
 
   return (
-    <div className="app-container">
-      <Navigator radius={radius} setRadius={setRadius} />
-      <Map radius={radius} setRadius={setRadius} />
+    <div>
+      <Navigator onCountyChange={handleCountyChange} />
+      <Map selectedCounties={selectedCounties} />
     </div>
   );
 }

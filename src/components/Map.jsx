@@ -2,13 +2,30 @@ import React, { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { FaLocationArrow } from "react-icons/fa";
+import sheltersData from './shelters.json';
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN;
 const TILEQUERY_URL = "https://api.mapbox.com/v4/mapbox.mapbox-streets-v8/tilequery";
 const GEOCODING_URL = "https://api.mapbox.com/geocoding/v5/mapbox.places";
 const RADIUS_METERS = 100000; // 3 miles in meters
 
-export default function Map() {
+// Geocoding API function using fetch
+const geocodeAddress = async (address) => {
+  const accessToken = mapboxgl.accessToken;
+  const response = await fetch(
+    `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
+      address
+    )}.json?access_token=${accessToken}`
+  );
+  const data = await response.json();
+  if (data.features && data.features.length > 0) {
+    return data.features[0].geometry.coordinates;
+  }
+  return null;
+};
+
+export default function Map({ selectedCounties }) {
+  const [shelterMarkers, setShelterMarkers] = useState([]); // Store shelter markers
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
   const markerRef = useRef(null);
@@ -39,7 +56,7 @@ export default function Map() {
           duration: 2000,
           easing: (t) => t,
         });
-
+        
         if (!mapRef.current.getSource("marker-source")) {
           mapRef.current.addSource("marker-source", {
             type: "geojson",
@@ -88,6 +105,7 @@ export default function Map() {
           .addTo(mapRef.current);
 
         queryFeaturesWithinRadius(initialLocation, RADIUS_METERS);
+        addShelterMarkers(selectedCounties);
       });
     };
 
@@ -107,6 +125,49 @@ export default function Map() {
       initializeMap();
     }
   }, [mapContainerRef.current]);
+  
+    // Function to add shelter markers to the map
+  const addShelterMarkers = async (counties) => {
+    if (!mapRef.current) return; // Make sure the map is initialized
+
+    // Remove existing markers from the map
+    shelterMarkers.forEach((marker) => marker.remove());
+    const newMarkers = [];
+
+    // Loop through selected counties and add shelter markers
+    for (const county of counties) {
+      const countyData = sheltersData.Tampa_Bay_Area_Shelters[county];
+      for (const shelterType of Object.keys(countyData)) {
+        const shelters = countyData[shelterType];
+        shelters.forEach(async (shelter) => {
+          const { Name, Address } = shelter;
+
+          // Fetch geocoded coordinates for the shelter's address
+          const coords = await geocodeAddress(Address);
+
+          if (coords) {
+            // Create a popup with the shelter's name and a navigation link
+            const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
+              <strong>${Name}</strong><br />
+              <button onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${coords[1]},${coords[0]}', '_blank')">Navigate</button>
+            `);
+
+            // Add a marker for the shelter at the geocoded coordinates
+            const marker = new mapboxgl.Marker()
+              .setLngLat(coords)
+              .setPopup(popup)
+              .addTo(mapRef.current);
+
+            newMarkers.push(marker);
+          } else {
+            console.error(`Failed to geocode address for ${Name}`);
+          }
+        });
+      }
+    }
+
+    setShelterMarkers(newMarkers); // Store the new markers
+  };
 
   // Function to query POIs within the radius and filter for essential services
   const queryFeaturesWithinRadius = async (center, radius, requiredCount = 50) => {
@@ -222,6 +283,11 @@ export default function Map() {
       return "Unnamed";
     }
   };
+
+  // Update shelter markers when selected counties change
+  useEffect(() => {
+    addShelterMarkers(selectedCounties);
+  }, [selectedCounties]);
 
   return (
     <div>
