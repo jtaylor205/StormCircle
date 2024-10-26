@@ -1,4 +1,3 @@
-// MapComponent.js
 import React, { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -7,24 +6,26 @@ import { FaLocationArrow } from "react-icons/fa";
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN;
 const TILEQUERY_URL = "https://api.mapbox.com/v4/mapbox.mapbox-streets-v8/tilequery";
 const GEOCODING_URL = "https://api.mapbox.com/geocoding/v5/mapbox.places";
+const RADIUS_METERS = 100000; // 3 miles in meters
 
-export default function Map({ radius }) {
+export default function Map() {
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
   const markerRef = useRef(null);
   const [userLocation, setUserLocation] = useState(null);
-  const [features, setFeatures] = useState([]); // State to store features with geocoded names
+  const [features, setFeatures] = useState([]); // State to store filtered POIs with geocoded names
+  const [poiMarkers, setPoiMarkers] = useState([]); // State to store POI markers
 
   useEffect(() => {
     if (!mapContainerRef.current) return;
 
     const initializeMap = (location) => {
-      const initialLocation = location || [-74.5, 40];
+      const initialLocation = location || [-82.4572, 27.9506]; // Tampa, FL
 
       mapRef.current = new mapboxgl.Map({
         container: mapContainerRef.current,
         center: initialLocation,
-        zoom: 5,
+        zoom: 12,
         pitch: 45,
         bearing: 0,
         style: "mapbox://styles/j-taylor/cm2pi61u300ef01ph12le6si4",
@@ -32,7 +33,7 @@ export default function Map({ radius }) {
 
       mapRef.current.on("load", () => {
         mapRef.current.easeTo({
-          zoom: 16.25,
+          zoom: 14,
           pitch: 52,
           bearing: 15,
           duration: 2000,
@@ -63,7 +64,7 @@ export default function Map({ radius }) {
             type: "circle",
             source: "marker-source",
             paint: {
-              "circle-radius": radius,
+              "circle-radius": RADIUS_METERS,
               "circle-color": "blue",
               "circle-opacity": 0.3,
               "circle-stroke-width": 1,
@@ -86,7 +87,7 @@ export default function Map({ radius }) {
           .setLngLat(initialLocation)
           .addTo(mapRef.current);
 
-        queryFeaturesWithinRadius(initialLocation, radius);
+        queryFeaturesWithinRadius(initialLocation, RADIUS_METERS);
       });
     };
 
@@ -107,14 +108,107 @@ export default function Map({ radius }) {
     }
   }, [mapContainerRef.current]);
 
-  useEffect(() => {
-    if (mapRef.current && mapRef.current.isStyleLoaded() && mapRef.current.getLayer("pulsing-ring")) {
-      mapRef.current.setPaintProperty("pulsing-ring", "circle-radius", radius);
-      if (userLocation) {
-        queryFeaturesWithinRadius(userLocation, radius);
+  // Function to query POIs within the radius and filter for essential services
+  const queryFeaturesWithinRadius = async (center, radius, requiredCount = 50) => {
+    const [lng, lat] = center;
+    let allFeatures = new Set();
+    const maxIterations = 20; // Define a max number of iterations to avoid infinite loops
+
+    // Define a set of offsets to query around the center
+    const offsets = [
+      [0, 0], // Center
+      [0.001, 0], [0, 0.001], [-0.001, 0], [0, -0.001], // Small offsets in each direction
+      [0.002, 0.002], [-0.002, 0.002], [0.002, -0.002], [-0.002, -0.002], // Slightly larger offsets
+      // Add more offsets as needed
+    ];
+
+    // Helper function to check if we have reached the desired number of unique features
+    const hasEnoughFeatures = () => allFeatures.size >= requiredCount;
+
+    try {
+      let iteration = 0;
+
+      while (!hasEnoughFeatures() && iteration < maxIterations) {
+        for (const [offsetLng, offsetLat] of offsets) {
+          if (hasEnoughFeatures()) break;
+
+          const queryLng = lng + offsetLng * iteration;
+          const queryLat = lat + offsetLat * iteration;
+          const url = `${TILEQUERY_URL}/${queryLng},${queryLat}.json?radius=${radius}&limit=50&layers=poi_label&access_token=${mapboxgl.accessToken}`;
+          
+          const response = await fetch(url);
+          const data = await response.json();
+
+          // Filter essential POIs based on keywords
+          const essentialPOIs = data.features.filter((feature) => {
+            const { category, name, class: featureClass, type } = feature.properties;
+            const keywords = ["grocery", "supermarket", "hospital", "pharmacy", "gas station", "publix", "food_and_drink_stores", "hardware", "medical"];
+            return keywords.some((keyword) =>
+              [category, name, featureClass, type].some((property) => property && property.toLowerCase().includes(keyword))
+            );
+          });
+
+          // Retrieve names for POIs and filter out address-like names
+          const featuresWithNames = await Promise.all(
+            essentialPOIs.map(async (feature) => {
+              const { geometry, properties } = feature;
+              const coordinates = geometry?.coordinates;
+              let name = properties.name || (coordinates && (await reverseGeocode(coordinates))) || "Unnamed POI";
+              
+              const addressPattern = /\b\d+.*\b(Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Lane|Ln|Drive|Dr|Court|Ct|Way|Place|Pl)\b/i;
+              if (addressPattern.test(name)) {
+                name = "Unnamed POI";
+              }
+
+              return {
+                ...feature,
+                properties: {
+                  ...properties,
+                  name,
+                },
+                coordinates,
+              };
+            })
+          );
+
+          // Add only unique features
+          featuresWithNames.forEach((feature) => {
+            if (feature.properties.name !== "Unnamed POI" && !Array.from(allFeatures).some((f) => f.properties.name === feature.properties.name)) {
+              allFeatures.add(feature);
+            }
+          });
+        }
+        
+        iteration += 1;
       }
+
+      const finalFeatures = Array.from(allFeatures).slice(0, requiredCount);
+      setFeatures(finalFeatures); // Update features state
+      addMarkersToMap(finalFeatures); // Add markers for each POI
+      console.log("Final essential POIs:", finalFeatures);
+    } catch (error) {
+      console.error("Error fetching features:", error);
     }
-  }, [radius]);
+  };
+
+  // Function to add markers for each POI
+  const addMarkersToMap = (pois) => {
+    // Clear previous markers
+    poiMarkers.forEach((marker) => marker.remove());
+    
+    // Add new markers
+    const newMarkers = pois.map((poi) => {
+      if (poi.coordinates) {
+        const marker = new mapboxgl.Marker({ color: "red" })
+          .setLngLat(poi.coordinates)
+          .addTo(mapRef.current);
+
+        return marker;
+      }
+      return null;
+    }).filter(Boolean); // Remove null values from the array
+    setPoiMarkers(newMarkers);
+  };
 
   // Reverse Geocode function
   const reverseGeocode = async (coordinates) => {
@@ -128,73 +222,6 @@ export default function Map({ radius }) {
       return "Unnamed";
     }
   };
-
-  // Function to query features within the radius using Tilequery API and reverse geocode each feature
-  const queryFeaturesWithinRadius = async (center, radius, namedPOIs = new Set(), attempts = 0) => {
-    const [lng, lat] = center;
-    const url = `${TILEQUERY_URL}/${lng},${lat}.json?radius=${radius * 20}&limit=50&layers=poi_label&access_token=${mapboxgl.accessToken}`;
-  
-    try {
-      const response = await fetch(url);
-      const data = await response.json();
-  
-      // Filter for relevant POI features based on properties like "class" and "category"
-      const poiFeatures = data.features.filter((feature) => {
-        const { class: featureClass, category, type } = feature.properties;
-        const isPOI = featureClass === "poi" || featureClass === "landmark" || category || type;
-        return isPOI && featureClass !== "sidewalk" && featureClass !== "pedestrian";
-      });
-  
-      // Retrieve names for POIs through reverse geocoding if necessary
-      const newFeaturesWithNames = await Promise.all(
-        poiFeatures.map(async (feature) => {
-          const { geometry, properties } = feature;
-          const coordinates = geometry?.coordinates;
-          let name = properties.name || (coordinates && (await reverseGeocode(coordinates))) || "Unnamed POI";
-  
-          // Filter out names that resemble addresses
-          const addressPattern = /\d+.*(Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Lane|Ln|Drive|Dr)/i;
-          if (addressPattern.test(name)) {
-            name = "Unnamed POI"; // Mark it as unnamed if it's an address-like name
-          }
-  
-          return {
-            ...feature,
-            properties: {
-              ...properties,
-              name,
-            },
-            coordinates,
-          };
-        })
-      );
-  
-      // Add only unique, named POIs to the accumulated set
-      newFeaturesWithNames.forEach((feature) => {
-        if (feature.properties.name !== "Unnamed POI") {
-          namedPOIs.add(JSON.stringify(feature)); // Using JSON string to ensure uniqueness
-        }
-      });
-  
-      // Check if we have reached 50 unique named POIs or need to requery
-      if (namedPOIs.size >= 50 || attempts >= 5) {
-        // Convert the set back to an array and parse the JSON to get the original structure
-        const uniqueNamedPOIs = Array.from(namedPOIs).map((poi) => JSON.parse(poi));
-        setFeatures(uniqueNamedPOIs.slice(0, 50)); // Display only the first 50 named POIs
-        console.log("Final unique POI list:", uniqueNamedPOIs.slice(0, 50));
-      } else {
-        // Retry to fill up to 50 unique named POIs if we haven't reached the attempt limit
-        console.log(`Retrying for more unique named POIs, attempt ${attempts + 1}`);
-        queryFeaturesWithinRadius(center, radius, namedPOIs, attempts + 1);
-      }
-    } catch (error) {
-      console.error("Error fetching features:", error);
-    }
-  };
-  
-
-
-
 
   return (
     <div>
@@ -211,11 +238,13 @@ export default function Map({ radius }) {
       </button>
       {features.length > 0 && (
         <div className="absolute bottom-10 left-10 p-4 bg-white rounded shadow-md max-w-xs max-h-64 overflow-y-auto">
-          <h3 className="font-bold">Features Within Radius:</h3>
+          <h3 className="font-bold">Essential POIs Within 3 Miles:</h3>
           <ul>
             {features.map((feature, index) => (
               <li key={index}>
                 <strong>Name:</strong> {feature.properties.name} <br />
+                <strong>Type:</strong> {feature.properties.class || "Unknown"} <br />
+                <strong>Coordinates:</strong> {feature.coordinates ? feature.coordinates.join(", ") : "N/A"}
               </li>
             ))}
           </ul>
