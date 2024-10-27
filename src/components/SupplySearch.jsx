@@ -2,28 +2,47 @@ import React, { useEffect, useState } from 'react';
 
 export default function SupplySearch({ features }) {
   const [steps, setSteps] = useState(null);
-  const [featureSummary, setFeatureSummary] = useState([]);
+  const [featureSummary, setFeatureSummary] = useState('');
+  const [loading, setLoading] = useState(false); // New state for loading
   const homeCoordinates = [-82.4572, 27.9506]; // Replace with actual user coordinates if available
 
-  // Function to summarize features by type
+  const typeMapping = {
+    food_and_drink_stores: 'Food and Drink Stores',
+    medical: 'Medical Suppliers',
+  };
+  
+  // Function to summarize features by type (but only include food and drink or medical)
   const summarizeFeatures = () => {
     const summary = features.reduce((acc, feature) => {
-      const type = feature.properties.class || 'Unknown Type';
-      acc[type] = (acc[type] || 0) + 1;
+      const rawType = feature.properties.class;
+      
+      // Only include food_and_drink_stores or medical
+      if (rawType === 'food_and_drink_stores' || rawType === 'medical') {
+        const type = typeMapping[rawType]; // Use the mapped name
+        acc[type] = (acc[type] || 0) + 1;
+      }
+  
       return acc;
     }, {});
-
-    const summaryArray = Object.entries(summary).map(([type, count]) => ({
-      type,
-      count,
-    }));
-
-    setFeatureSummary(summaryArray);
+  
+    // Create JSX elements with bold counts for each feature type
+    const summaryElements = Object.entries(summary).map(([type, count]) => (
+      <span key={type}>
+        <strong>{count}</strong> {type}
+      </span>
+    ));
+    
+    // Join the elements with 'and' between them
+    const summarySentence = summaryElements.length > 0 
+      ? <>Located {summaryElements.reduce((prev, curr, index) => [prev, index > 0 ? ' and ' : '', curr])} in your area.</>
+      : 'No relevant facilities found in your area.';
+    
+    setFeatureSummary(summarySentence);
   };
 
   // Prompt to send to the API
   const promptText = `
-  Given the following list of facilities nearby, generate a JSON array with up to 5 steps of recommended actions for hurricane preparation. Each step should be in the format: 
+  Given the following list of facilities nearby, generate a JSON array with up to 5 steps of recommended actions for hurricane preparation. No perishable foods. Make sure to include at least 1 medical supply statement, 1 food statement, and 1 gas statement. Each step should be in the format: 
   { "step": <number>, "action": "<action description>" }
   
   Only use facilities from the list provided, and do not add any additional facilities. If there are specific items to get from these facilities, mention them explicitly. Keep the response in pure JSON format without any additional text or explanations. 
@@ -40,6 +59,7 @@ export default function SupplySearch({ features }) {
   
 
   const fetchSteps = async () => {
+    setLoading(true); // Set loading to true when fetching starts
     try {
       const response = await fetch('http://localhost:2020/api/generate-text', {
         method: 'POST',
@@ -70,6 +90,8 @@ export default function SupplySearch({ features }) {
     } catch (error) {
       console.error('Error fetching steps:', error);
       setSteps([{ step: 'Error', action: 'Failed to fetch or parse steps from API.' }]);
+    } finally {
+      setLoading(false); // Set loading back to false when the request is finished
     }
   };
   
@@ -77,35 +99,35 @@ export default function SupplySearch({ features }) {
 
   useEffect(() => {
     summarizeFeatures();
-    fetchSteps();
   }, [features]);
 
   return (
     <div>
-      <h1>Recommended Steps</h1>
       <div>
-        <h2>Feature Summary</h2>
-        <ul>
-          {featureSummary.map(({ type, count }) => (
-            <li key={type}>
-              {count} {type}
-            </li>
-          ))}
-        </ul>
+        <h2 className='my-3 italic'>{featureSummary}</h2>
       </div>
       <div>
-        <h2>Steps</h2>
-        <ul>
-          {Array.isArray(steps) && steps.length > 0 ? (
-            steps.map((step) => (
-              <li key={step.step}>
-                {step.step}: {step.action}
-              </li>
-            ))
-          ) : (
-            <li>No steps available</li>
-          )}
-        </ul>
+        <button 
+          onClick={fetchSteps} 
+          className="mt-4 align-center mb-3 hover:bg-green-700 hover:text-white text-green-700 font-semibold py-2 px-4 border border-green-700 rounded duration-100"
+        >
+          Generate Guide
+        </button>
+        <div className='my-3 bg-white rounded p-5'>
+          <ul>
+            {loading ? ( // Show "Loading..." if loading is true
+              <li>Loading...</li>
+            ) : steps && steps.length > 0 ? (
+              steps.map((step) => (
+                <li className='my-1.5' key={step.step}>
+                  <b className='text-bold'>{step.step}</b>: {step.action}
+                </li>
+              ))
+            ) : (
+              <li>Create your guide to get started!</li> // Show original message if not loading
+            )}
+          </ul>
+        </div>
       </div>
     </div>
   );

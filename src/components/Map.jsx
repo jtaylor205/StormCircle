@@ -36,22 +36,22 @@ export default function Map({ selectedCounties, features, setFeatures, activeVie
     if (!mapContainerRef.current) return;
 
     const initializeMap = (location) => {
-      const initialLocation = location || [-82.4572, 27.9506]; // Tampa, FL
+      const initialLocation = location || [-82.4572, 27.9506]; // Tampa, FL or GEOLOCATION
 
       mapRef.current = new mapboxgl.Map({
         container: mapContainerRef.current,
         center: initialLocation,
         zoom: 12,
         pitch: 45,
-        bearing: 0,
+        bearing: -20,
         style: "mapbox://styles/j-taylor/cm2pi61u300ef01ph12le6si4",
       });
 
       mapRef.current.on("load", () => {
         mapRef.current.easeTo({
-          zoom: 14,
+          zoom: 16,
           pitch: 52,
-          bearing: 15,
+          bearing: -15,
           duration: 2000,
           easing: (t) => t,
         });
@@ -78,6 +78,7 @@ export default function Map({ selectedCounties, features, setFeatures, activeVie
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const location = [position.coords.longitude, position.coords.latitude];
+          // const location = [-82.4572, 27.9506];
           setUserLocation(location);
           initializeMap(location);
         },
@@ -246,7 +247,7 @@ const addMarkersToMap = (pois) => {
         `);
 
       // Create the marker and attach the popup
-      const marker = new mapboxgl.Marker({ color: "red" })
+      const marker = new mapboxgl.Marker({ color: "green" })
         .setLngLat(poi.coordinates)
         .setPopup(popup) // Attach the popup to the marker
         .addTo(mapRef.current);
@@ -292,7 +293,7 @@ const addMarkersToMap = (pois) => {
             mapRef.current.flyTo({ center: userLocation, zoom: 16.25, speed: 1.2 });
           }
         }}
-        className="Reset absolute top-5 right-5 z-10 p-2 bg-white rounded-full shadow-md"
+        className="Reset hover:text-blue-500 absolute top-5 right-5 z-10 p-2 bg-white rounded-full shadow-md duration-75"
       >
         <FaLocationArrow />
       </button>
