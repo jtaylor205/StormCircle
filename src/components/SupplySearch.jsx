@@ -4,7 +4,6 @@ export default function SupplySearch({ features }) {
   const [steps, setSteps] = useState(null);
   const [featureSummary, setFeatureSummary] = useState('');
   const [loading, setLoading] = useState(false); // New state for loading
-  const homeCoordinates = [-82.4572, 27.9506]; // Replace with actual user coordinates if available
 
   const typeMapping = {
     food_and_drink_stores: 'Food and Drink Stores',
