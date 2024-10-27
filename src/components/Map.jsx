@@ -24,7 +24,7 @@ const geocodeAddress = async (address) => {
   return null;
 };
 
-export default function Map({ selectedCounties, features, setFeatures}) {
+export default function Map({ selectedCounties, features, setFeatures, activeView}) {
   const [shelterMarkers, setShelterMarkers] = useState([]); // Store shelter markers
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
@@ -90,6 +90,8 @@ export default function Map({ selectedCounties, features, setFeatures}) {
       initializeMap();
     }
   }, [mapContainerRef.current]);
+
+
   
     // Function to add shelter markers to the map
   const addShelterMarkers = async (counties) => {
@@ -210,16 +212,24 @@ export default function Map({ selectedCounties, features, setFeatures}) {
 
       const finalFeatures = Array.from(allFeatures).slice(0, requiredCount);
       setFeatures(finalFeatures); // Update features state
-      addMarkersToMap(finalFeatures); // Add markers for each POI
       console.log("Final essential POIs:", finalFeatures);
     } catch (error) {
       console.error("Error fetching features:", error);
     }
   };
 
-  // Function to add markers for each POI
-// Function to add markers for each POI with popups
-// Function to add markers for each POI with popups
+  useEffect(() => {
+    if (activeView === "Supply Search") {
+      addMarkersToMap(features);
+    } else {
+      clearMarkers();
+    }
+  }, [activeView, features]);
+ 
+  const clearMarkers = () => {
+    poiMarkers.forEach((marker) => marker.remove());
+    setPoiMarkers([]);
+  };
 const addMarkersToMap = (pois) => {
   // Clear previous markers
   poiMarkers.forEach((marker) => marker.remove());

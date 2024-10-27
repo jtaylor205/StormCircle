@@ -3,8 +3,7 @@ import NavigatorBtn from "./NavigatorBtn.jsx";
 import SheltersSearch from "./SheltersSearch.jsx";
 import SupplySearch from "./SupplySearch";
 
-export default function Navigator({ onCountyChange, features}) {
-  const [activeView, setActiveView] = useState("menu");
+export default function Navigator({ onCountyChange, features, activeView, setActiveView}) {
   const [selectedCounties, setSelectedCounties] = useState([]); // Keep track of selected counties
 
   // Clear selected counties and go back to menu
@@ -20,7 +19,7 @@ export default function Navigator({ onCountyChange, features}) {
         return (
           <div>
             <div className="text-3xl font-bold mb-2">Supply Search Screen</div>
-            <SupplySearch setActiveView={setActiveView} features={features}/>
+            <SupplySearch setActiveView={setActiveView} features={features} activeView={activeView}/>
             <button
               className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded mt-4"
               onClick={handleBackToMenu} // Use the back handler
