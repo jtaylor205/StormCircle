@@ -1,70 +1,33 @@
-# Getting Started with Create React App
+![Storm Circle Logo](/public/stormCircle.png?raw=true "Title")
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Inspiration
+When hurricanes approach, generic preparation guides are helpful, but navigating through countless websites to find all the necessary information can be time-consuming and overwhelming. We wanted to create a more streamlined experience by integrating AI to develop personalized action plans that guide users to nearby essential resources. Additionally, navigating to evacuation shelters can be life-saving if your home is at risk. Our goal was to design a solution that consolidates all this critical information in one place, making it accessible and actionable in real time.
+## What it does
+Storm Circle is an interactive, AI-powered platform that provides users with personalized supply preparation plans using IBM’s Watsonx AI. It offers a real-time map featuring evacuation shelters, local stores with essential supplies, and customizable search features, so users can find what they need quickly and efficiently. The platform helps ensure you’re prepared and have access to safe locations during hurricanes.
+## How we built it
+We built Storm Circle using React for the web interface, with Mapbox powering the dynamic map features. By integrating geocoding and tilequery from Mapbox APIs, we enhanced user interactivity, allowing them to search for nearby shelters and suppliers with ease. Watsonx Flan-UL2 serves as the AI engine, generating personalized supply plans tailored to each user’s needs, based on their location and the storm's severity.
+## Challenges we ran into
+One of our biggest challenges was integrating turn-by-turn navigation directly into the Mapbox visual interface, ensuring the user experience remained intuitive. Additionally, querying and verifying the availability of essential supplies at nearby stores was more complex than anticipated.
+## Accomplishments that we're proud of
+We’re proud of successfully querying real-time data on essential supplies and seamlessly integrating the Watsonx AI model to generate accurate, personalized preparation plans. We also created a smooth and user-friendly UI that makes critical hurricane information accessible with just a few clicks.
+## What we learned
+Throughout the project, we deepened our understanding of working with Mapbox APIs to handle real-time data and geospatial queries. We also learned how to integrate external AI models and leverage them for user recommendations.
+## What's next for Storm Circle!
+We plan to expand our coverage of evacuation shelters across Florida and introduce an evacuation zone feature that will visually display whether users are in mandatory evacuation areas based on incoming storm data.
 
-## Available Scripts
+## Instructions
 
-In the project directory, you can run:
+Clone this repository and install necessary packages with:
+
+### `npm i`
+
+Create a .env file in the root and add your IBM Watsonx.ai API token and mapbox API key
+
+In the project directory, run:
+
+### `node server.js` 
 
 ### `npm start`
 
-Runs the app in the development mode.\
+This starts the server to run IBM Watsonx and runs the app in the development mode.
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)

@@ -286,7 +286,7 @@ const addMarkersToMap = (pois) => {
 
   return (
     <div>
-      <div ref={mapContainerRef} className="w-full h-[100vh] rounded-lg border-4 border-blue-500 overflow-hidden" />
+      <div ref={mapContainerRef} className="w-full h-[100vh] border-4 border-blue-500 overflow-hidden" />
       <button
         onClick={() => {
           if (userLocation) {
