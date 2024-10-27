@@ -3,7 +3,7 @@ import NavigatorBtn from "./NavigatorBtn.jsx";
 import SheltersSearch from "./SheltersSearch.jsx";
 import SupplySearch from "./SupplySearch";
 
-export default function Navigator({ onCountyChange }) {
+export default function Navigator({ onCountyChange, features}) {
   const [activeView, setActiveView] = useState("menu");
   const [selectedCounties, setSelectedCounties] = useState([]); // Keep track of selected counties
 
