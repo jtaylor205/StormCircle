@@ -1,4 +1,4 @@
-![Alt text](relative%20path/to/stormCircle.png?raw=true "Title")
+![Alt text](/public/stormCircle.png?raw=true "Title")
 
 ## Inspiration
 When hurricanes approach, generic preparation guides are helpful, but navigating through countless websites to find all the necessary information can be time-consuming and overwhelming. We wanted to create a more streamlined experience by integrating AI to develop personalized action plans that guide users to nearby essential resources. Additionally, navigating to evacuation shelters can be life-saving if your home is at risk. Our goal was to design a solution that consolidates all this critical information in one place, making it accessible and actionable in real time.
