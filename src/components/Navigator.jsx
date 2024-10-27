@@ -20,7 +20,7 @@ export default function Navigator({ onCountyChange, features}) {
         return (
           <div>
             <div className="text-3xl font-bold mb-2">Supply Search Screen</div>
-            <SupplySearch setActiveView={setActiveView} />
+            <SupplySearch setActiveView={setActiveView} features={features}/>
             <button
               className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded mt-4"
               onClick={handleBackToMenu} // Use the back handler
@@ -51,7 +51,18 @@ export default function Navigator({ onCountyChange, features}) {
             <div className="text-3xl font-bold mb-2">Storm Circle</div>
             <div className="w-full align-center">
               <NavigatorBtn text="Supply Search" onClick={() => setActiveView("Supply Search")} />
-              <NavigatorBtn text="Shelter Locations" onClick={() => setActiveView("Shelter Locations")} />
+                <div className="mb-2">
+                    Create a Preparation Plan with <bold className='font-bold'>Supply Search</bold>! 
+                    Leverage the power of IBM Watsonx to analyze nearby retail stores and medical providers. Based on your location, 
+                    IBM's Watsonx will generate a personalized outline on what to purchase and where to go to ensure 
+                    you're fully prepared for the hurricane.
+                </div>
+              <NavigatorBtn text="Shelter Locations" onClick={() => setActiveView("Shelter Marker")} />
+                <div className="mb-2">
+                    Find Nearby Shelters with <bold className='font-bold'>Shelter Marker</bold>! 
+                    Access real-time evacuation shelter data to easily locate safe havens in your county. 
+                    Get instant navigation to the nearest shelter and ensure your safety during a hurricane.
+                </div>
             </div>
           </div>
         );
