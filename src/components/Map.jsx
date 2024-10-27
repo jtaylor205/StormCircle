@@ -24,13 +24,12 @@ const geocodeAddress = async (address) => {
   return null;
 };
 
-export default function Map({ selectedCounties }) {
+export default function Map({ selectedCounties, features, setFeatures}) {
   const [shelterMarkers, setShelterMarkers] = useState([]); // Store shelter markers
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
   const markerRef = useRef(null);
   const [userLocation, setUserLocation] = useState(null);
-  const [features, setFeatures] = useState([]); // State to store filtered POIs with geocoded names
   const [poiMarkers, setPoiMarkers] = useState([]); // State to store POI markers
 
   useEffect(() => {
