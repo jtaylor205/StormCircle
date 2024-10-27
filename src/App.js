@@ -5,16 +5,17 @@ import Navigator from "./components/Navigator.jsx";
 
 export default function App() {
   const [selectedCounties, setSelectedCounties] = useState([]);
+  const [features, setFeatures] = useState([]);
 
-  //function to update selected counties
+  // Function to update selected counties
   const handleCountyChange = (counties) => {
     setSelectedCounties(counties);
   };
 
   return (
     <div>
-      <Navigator onCountyChange={handleCountyChange} />
-      <Map selectedCounties={selectedCounties} />
+      <Navigator onCountyChange={handleCountyChange} features={features} />
+      <Map selectedCounties={selectedCounties} setFeatures={setFeatures} features={features} />
     </div>
   );
 }
